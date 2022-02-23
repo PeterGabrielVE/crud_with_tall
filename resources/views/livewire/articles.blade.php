@@ -3,6 +3,13 @@
         <div>Articulos</div>
     </div>
     <div class="mt-3">
+        <div class="flex justify-between">
+            <div></div>
+            <div class="mr-2">
+                <input type="checkbox" class="mr-2 leading-tight" name=""  wire:model="active" />
+                Solo activos?
+            </div>
+        </div>
         <table class="table-auto w-full">
             <thead>
                 <tr>
