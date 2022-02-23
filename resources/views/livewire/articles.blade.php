@@ -2,9 +2,12 @@
     <div class="mt-4 text-2xl">
         <div>Articulos</div>
     </div>
+    {{ $query }}
     <div class="mt-3">
         <div class="flex justify-between">
-            <div></div>
+            <div>
+                <input wire:model.debounce.500ms="q" type="search" placeholder="Buscar" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline placeholder-blue-400" name="">
+            </div>
             <div class="mr-2">
                 <input type="checkbox" class="mr-2 leading-tight" name=""  wire:model="active" />
                 Solo activos?
