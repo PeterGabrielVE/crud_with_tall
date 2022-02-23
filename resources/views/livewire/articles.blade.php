@@ -28,9 +28,11 @@
                     <th class="px-4 py-2">
                         <div class="flex items-center">Cantidad</div>
                     </th>
+                    @if(!$active)
                     <th class="px-4 py-2">
                         Status
                     </th>
+                    @endif
                     <th class="px-4 py-2">
                         Accion
                     </th>
