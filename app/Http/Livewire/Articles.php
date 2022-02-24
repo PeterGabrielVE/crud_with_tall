@@ -10,18 +10,26 @@ class Articles extends Component
     use WithPagination;
 
     public $active;
+    public $article;
     public $q;
     public $sortBy = 'id';
     public $sortAsc = true;
     public $confirmingArticleDeletion = false;
     public $confirmingArticleAdd = false;
 
-    
+
     protected $queryString = [
         'active' => ['except' => false],
         'q' => ['except' => ''],
         'sortBy' => ['except' => 'id'],
         'sortAsc' => ['except' => true],
+    ];
+
+    protected $rules = [
+        'article.name' => 'required|string|min:4',
+        'article.price' => 'required|numeric|between:1,10000',
+        'article.quantity' => 'required|numeric|between:1,10000',
+        'article.status' => 'boolean'
     ];
 
     public function render()
@@ -38,12 +46,11 @@ class Articles extends Component
             return $query->active();
         })
         ->orderBy( $this->sortBy, $this->sortAsc ? 'ASC' : 'DESC');
-        $query = $articles->toSql();
+        //$query = $articles->toSql();
         $articles  = $articles->paginate(10);
 
         return view('livewire.articles',[
             'articles' => $articles,
-            'query' => $query,
         ]);
     }
 
