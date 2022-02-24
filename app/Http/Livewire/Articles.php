@@ -13,7 +13,10 @@ class Articles extends Component
     public $q;
     public $sortBy = 'id';
     public $sortAsc = true;
+    public $confirmingArticleDeletion = false;
+    public $confirmingArticleAdd = false;
 
+    
     protected $queryString = [
         'active' => ['except' => false],
         'q' => ['except' => ''],
@@ -59,5 +62,51 @@ class Articles extends Component
             $this->sortAsc = !$this->sortAsc;
         }
         $this->sortBy = $field;
+    }
+
+    
+    public function confirmArticleDeletion ( $id)
+    {
+        //$article->delete();
+        $this->confirmingArticleDeletion = $id;
+    }
+
+    public function deleteArticle (Article $article)
+    {
+        $article->delete();
+        $this->confirmingArticleDeletion = false;
+        session()->flash('message', 'Artículo eliminado exitosamente');
+    }
+
+    public function confirmArticleAdd ()
+    {
+        $this->reset(['article']);
+        $this->confirmingArticleAdd = true;
+    }
+
+    public function saveArticle()
+    {
+        $this->validate();
+
+        if (isset ($this->article->id )) {
+            $this->article->save();
+            session()->flash('message', 'Artículo actualizado exitosamente');
+        }else {
+            auth()->user()->articles()->create([
+                'name' => $this->article['name'],
+                'price' => $this->article['price'],
+                'quantity' => $this->article['quantity'],
+                'status' => $this->article['status'] ?? 0
+            ]);
+            session()->flash('message', 'Artículo creado exitosamente');
+
+        }
+        $this->confirmingArticleAdd = false;
+    }
+
+    public function confirmArticleEdit (Article $article)
+    {
+        $this->article = $article;
+        $this->confirmingArticleAdd = true;
     }
 }

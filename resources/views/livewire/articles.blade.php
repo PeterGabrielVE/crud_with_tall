@@ -58,7 +58,14 @@
                         <td class="rounded border px-4 py-2">{{ number_format($article->price,2) }}</td>
                         <td class="rounded border px-4 py-2">{{ $article->quantity }}</td>
                         <td class="rounded border px-4 py-2">{{ $article->status ? 'Activo':'Inactivo' }}</td>
-                        <td class="rounded border px-4 py-2">Editar/Eliminar</td>
+                        <td class="rounded border px-4 py-2">
+                            <x-jet-button wire:click="confirmArticleEdit( {{ $article->id }} )" class="bg-green-500 hover:bg-green-800">
+                                Editar Artículo
+                            </x-jet-button>
+                            <x-jet-danger-button wire:click="confirmArticleDeletion ({{ $article->id }}) " wire:loading.attr="disabled">
+                                {{ __('Eliminar') }}
+                            </x-jet-danger-button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -67,4 +74,65 @@
     <div class="mt-4">
         {{ $articles->links() }}
     </div>
+
+    <x-jet-confirmation-modal wire:model="confirmingArticleDeletion">
+            <x-slot name="title">
+                {{ __('Eliminar Artículo') }}
+            </x-slot>
+
+            <x-slot name="content">
+                {{ __('¿Está seguro que desea eliminar el Artículo?') }}
+            </x-slot>
+
+            <x-slot name="footer">
+                <x-jet-secondary-button wire:click="$toggle('confirmingArticleDeletion', false)" wire:loading.attr="disabled">
+                    {{ __('Cancelar') }}
+                </x-jet-secondary-button>
+
+                <x-jet-danger-button class="ml-2" wire:click="deleteArticle ({{ $confirmingArticleDeletion }})" wire:loading.attr="disabled">
+                    {{ __('Eliminar') }}
+                </x-jet-danger-button>
+            </x-slot>
+        </x-jet-confirmation-modal>
+
+        <x-jet-dialog-modal wire:model="confirmingArticleAdd">
+            <x-slot name="title">
+                {{ isset( $this->article->id) ? 'Editar Artículo' : 'Crear Artículo' }}
+            </x-slot>
+
+            <x-slot name="content">
+                <div class="col-span-6 sm:col-span-4">
+                    <x-jet-label for="name" value="{{ __('Descripción') }}" />
+                        <x-jet-input id="article.name" type="text" class="mt-1 block w-full" wire:model.defer="article.name" />
+                        <x-jet-input-error for="article.name" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4 mt-4">
+                    <x-jet-label for="price" value="{{ __('Precio') }}" />
+                        <x-jet-input id="article.price" type="text" class="mt-1 block w-full" wire:model.defer="article.price" />
+                        <x-jet-input-error for="article.price" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4 mt-4">
+                    <x-jet-label for="quantity" value="{{ __('Cantidad') }}" />
+                        <x-jet-input id="article.quantity" type="text" class="mt-1 block w-full" wire:model.defer="article.quantity" />
+                        <x-jet-input-error for="article.quantity" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4 mt-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" wire:model.defer="article.status" name="">
+                            <span class="ml-2 text-sm text-gray-600">Activo</span>
+
+                    </label>
+                </div>
+            </x-slot>
+
+            <x-slot name="footer">
+                <x-jet-secondary-button wire:click="$toggle('confirmingArticleAdd', false)" wire:loading.attr="disabled">
+                    {{ __('Cancelar') }}
+                </x-jet-secondary-button>
+
+                <x-jet-danger-button class="ml-2" wire:click="saveArticle ()" wire:loading.attr="disabled">
+                    {{ __('Guardar') }}
+                </x-jet-danger-button>
+            </x-slot>
+        </x-jet-dialog-modal>
 </div>
